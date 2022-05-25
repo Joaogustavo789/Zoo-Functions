@@ -25,4 +25,18 @@ describe('Testes da função getOpeningHours', () => {
   it('Verifica se para os argumentos Monday e 13:00-AM lança uma exceção com a mensagem: The hour must be between 0 and 12', () => {
     expect(() => getOpeningHours('Monday', '13:00-AM')).toThrow('The hour must be between 0 and 12');
   });
+  it('Verifica se para os argumentos Tuesday e 09:60-AM lança uma exceção com a mensagem: The minutes must be between 0 and 59', () => {
+    expect(() => getOpeningHours('Tuesday', '09:60-AM')).toThrow('The minutes must be between 0 and 59');
+  });
+  it('Verifica se não passando argumentos retorna um objeto', () => {
+    expect(getOpeningHours()).toEqual({
+      Tuesday: { open: 8, close: 6 },
+      Wednesday: { open: 8, close: 6 },
+      Thursday: { open: 10, close: 8 },
+      Friday: { open: 10, close: 8 },
+      Saturday: { open: 8, close: 10 },
+      Sunday: { open: 8, close: 8 },
+      Monday: { open: 0, close: 0 },
+    });
+  });
 });
