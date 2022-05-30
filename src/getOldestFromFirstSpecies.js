@@ -15,13 +15,3 @@ function getOldestFromFirstSpecies(id) {
 }
 
 module.exports = getOldestFromFirstSpecies;
-
-/* A função recebe um parâmetro id referente à pessoa colaboradora e a partir desse id
-
-1) Encontre a pessoa colaboradora que possui o id passado por parâmetro;
-
-2) Encontre a primeira espécie de animal que a pessoa colaboradora é responsável;
-
-3) Encontre o animal mais velho daquela espécie;
-
-4) Retorne um array com as informações do animal mais velho daquela espécie. */
