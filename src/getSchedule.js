@@ -1,34 +1,85 @@
 const data = require('../data/zoo_data');
 
-const { species } = data;
+const { species, hours } = data;
 
-const { hours } = data;
-
-function dayParameter(scheduleTa) {
-  if (scheduleTa === 'Monday') {
-    return { [scheduleTa]: { officeHour: 'CLOSED', exhibition: 'The zoo will be closed!' } };
+// Função auxiliar para a função visitationZoo
+const openClose = (day) => {
+  if (day[0] === 'Monday') {
+    return 'CLOSED';
   }
-  const { open, close } = hours[scheduleTa];
-  return { [scheduleTa]: {
-    officeHour: `Open from ${open}am until ${close}pm`,
-    exhibition: species
-      .filter((elemento) => elemento.availability.includes(scheduleTa))
-      .map((element) => element.name),
-  } };
+
+  if (day[0] !== 'Monday') {
+    return `Open from ${day[1].open}am until ${day[1].close}pm`;
+  }
+};
+
+// Função auxiliar para a função visitationZoo
+const dayExhibition = (day) => {
+  if (day[0] === 'Monday') {
+    return 'The zoo will be closed!';
+  }
+
+  const animalDay = species.filter((animal) => animal.availability.includes(day[0]));
+
+  const animalExibition = animalDay.map((animal) => animal.name);
+
+  return animalExibition;
+};
+
+function visitationZoo() {
+  const zooSchedule = {};
+
+  const daysVisit = Object.entries(hours);
+
+  daysVisit.forEach((day) => {
+    zooSchedule[day[0]] = {
+      officeHour: openClose(day),
+      exhibition: dayExhibition(day),
+    };
+  });
+
+  return zooSchedule;
+}
+
+function visitationZooByAnimal(specie) {
+  const animalZoo = species.find((animal) => animal.name === specie);
+
+  const specieVisit = animalZoo.availability;
+
+  return specieVisit;
+}
+
+function visitationZooByDay(dayParam) {
+  const getHours = Object.entries(hours);
+
+  const findDay = getHours.find((day) => day[0] === dayParam);
+
+  const zooScheduleByDay = {
+    [dayParam]: {
+      officeHour: openClose(findDay),
+      exhibition: dayExhibition(findDay),
+    },
+
+    // [dayParam]: visitationZoo()[dayParam], -> Outra maneira de trazer o dia especifico.
+  };
+
+  return zooScheduleByDay;
 }
 
 function getSchedule(scheduleTarget) {
-  const verificaSpecie = species.some((el) => el.name === scheduleTarget);
-  if (verificaSpecie) {
-    return species.find((elemento) => scheduleTarget === elemento.name).availability;
+  const findAnimal = species.find((animal) => animal.name === scheduleTarget);
+
+  const getHours2 = Object.keys(hours);
+
+  if (findAnimal) {
+    return visitationZooByAnimal(scheduleTarget);
   }
-  const dias = Object.keys(hours);
-  if (!scheduleTarget || !dias.includes(scheduleTarget)) {
-    return dias.reduce((acc, curr) => (
-      { ...acc, [curr]: Object.values(dayParameter(curr))[0] }
-    ), {});
+
+  if (getHours2.includes(scheduleTarget)) {
+    return visitationZooByDay(scheduleTarget);
   }
-  return dayParameter(scheduleTarget);
+
+  return visitationZoo();
 }
 
 module.exports = getSchedule;

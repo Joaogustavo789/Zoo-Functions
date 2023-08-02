@@ -1,16 +1,29 @@
 const data = require('../data/zoo_data');
 
 function isManager(id) {
-  const manager = data.employees.some((chefe) => chefe.managers.includes(id));
-  return manager;
+  const dataEmployee = data.employees;
+
+  const getManager = dataEmployee.some((man) => man.managers.includes(id));
+
+  return getManager;
 }
 
 function getRelatedEmployees(managerId) {
-  if (!isManager(managerId)) {
+  const manager = isManager(managerId);
+
+  const dataEmployee = data.employees;
+
+  if (manager === false) {
     throw new Error('O id inserido não é de uma pessoa colaboradora gerente!');
   }
-  const gerente = data.employees.filter((lider) => lider.managers.includes(managerId));
-  return gerente.map((empregado) => `${empregado.firstName} ${empregado.lastName}`);
+
+  if (manager === true) {
+    const filterEmRelated = dataEmployee.filter((em) => em.managers.includes(managerId));
+
+    const emRelated = filterEmRelated.map((emp) => `${emp.firstName} ${emp.lastName}`);
+
+    return emRelated;
+  }
 }
 
 module.exports = { isManager, getRelatedEmployees };

@@ -1,8 +1,9 @@
-const { species } = require('../data/zoo_data');
 const data = require('../data/zoo_data');
 
 function getSpeciesByIds(...ids) {
-  return ids.map((id) => species.find((elemento) => elemento.id === id));
+  const idsFilter = data.species.filter((animal) => ids.includes(animal.id));
+
+  return idsFilter;
 }
 
 module.exports = getSpeciesByIds;
